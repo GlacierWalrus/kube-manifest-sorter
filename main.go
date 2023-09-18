@@ -9,10 +9,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Metadata struct {
-	Name string `yaml:"name"`
-}
-
 type DocumentSlice []interface{}
 
 // Implement sort.Interface for DocumentSlice
