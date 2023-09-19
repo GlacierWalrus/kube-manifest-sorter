@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"sort"
@@ -44,9 +43,6 @@ func (p DocumentSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
 func main() {
 	input := os.Args[1]
-	output := os.Args[2]
-
-	fmt.Println("Starting")
 
 	// Read YAML file
 	file, err := os.Open(input)
@@ -55,7 +51,6 @@ func main() {
 	}
 	defer file.Close()
 
-	fmt.Println("Finished reading docs, decoding")
 	var documents DocumentSlice
 
 	decoder := yaml.NewDecoder(file)
@@ -63,24 +58,18 @@ func main() {
 		var doc interface{}
 		err = decoder.Decode(&doc)
 		if err != nil {
-			log.Println(err)
 			break
 		}
 		documents = append(documents, doc)
 	}
 
-	fmt.Println("Finished decoding docs")
 	if err.Error() != "EOF" {
 		log.Fatalf("error: %v", err)
 	}
 
-	fmt.Println("Sorting docs")
 	sort.Sort(documents)
 
-	outputFile, err := os.Create(output)
-
-	fmt.Println("encoding")
-	encoder := yaml.NewEncoder(outputFile)
+	encoder := yaml.NewEncoder(os.Stdout)
 	for _, doc := range documents {
 		err := encoder.Encode(&doc)
 		if err != nil {
